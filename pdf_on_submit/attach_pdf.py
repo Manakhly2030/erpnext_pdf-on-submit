@@ -48,10 +48,24 @@ def attach_pdf(doc, event=None):
         "letter_head": letter_head,
     }
 
+<<<<<<< HEAD
     if settings.create_pdf_in_background:
         enqueue(args)
     else:
         execute(**args)
+=======
+	frappe.enqueue(
+		method=execute,
+		timeout=30,
+		now=bool(
+			not settings.create_pdf_in_background
+			or frappe.flags.in_test
+			or frappe.conf.developer_mode
+		),
+		enqueue_after_commit=True,
+		**args,
+	)
+>>>>>>> e6df555 (fix: Enqueue PDF creation after commit to avoid stale doc values (#51))
 
 
 def enqueue(args):
